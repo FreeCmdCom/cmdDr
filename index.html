@@ -87,6 +87,9 @@
             border-bottom: 1px solid #333;
             text-align: center;
             font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         #chat-messages {
@@ -193,6 +196,57 @@
             50% { color: #ff0; text-shadow: 0 0 5px #ff0; }
             100% { color: #f00; text-shadow: 0 0 5px #f00; }
         }
+        
+        #notify-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #111;
+            border: 1px solid #0f0;
+            padding: 15px;
+            z-index: 1000;
+            display: none;
+            width: 300px;
+        }
+        
+        #notify-input {
+            width: 100%;
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #notify-send {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        #notify-close {
+            background: #000;
+            color: #f00;
+            border: 1px solid #f00;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        #notify-btn {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px 10px;
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -257,9 +311,18 @@
     
     <div id="chat-container">
         <div id="chat-header">
-            DARKNET MONITORING CHAT
+            <span>DARKNET MONITORING CHAT</span>
+            <button id="notify-btn">Notify Server</button>
         </div>
         <div id="chat-messages"></div>
+    </div>
+
+    <div id="notify-panel">
+        <input type="text" id="notify-input" placeholder="Enter your message...">
+        <div>
+            <button id="notify-send">Send</button>
+            <button id="notify-close">Close</button>
+        </div>
     </div>
 
     <script>
@@ -327,6 +390,65 @@
             "Ошибки разрешения DNS",
             "Обнаружено сканирование портов"
         ];
+
+        // Responses to user messages
+        const responses = [
+            "Negative, command not recognized",
+            "Affirmative, processing request",
+            "Warning: unauthorized command",
+            "System overload detected",
+            "Command queued for execution",
+            "ERROR: insufficient privileges",
+            "Request timed out",
+            "Security protocol activated",
+            "Standby for further instructions",
+            "ALERT: suspicious activity detected",
+            "Это невозможно выполнить",
+            "Команда принята к исполнению",
+            "Предупреждение: неавторизованный доступ",
+            "Система перегружена",
+            "Ошибка: недостаточно прав",
+            "Требуется подтверждение"
+        ];
+        
+        // ===== NOTIFY PANEL FUNCTIONS =====
+        document.getElementById('notify-btn').addEventListener('click', () => {
+            document.getElementById('notify-panel').style.display = 'block';
+            document.getElementById('notify-input').focus();
+        });
+
+        document.getElementById('notify-close').addEventListener('click', () => {
+            document.getElementById('notify-panel').style.display = 'none';
+        });
+
+        document.getElementById('notify-send').addEventListener('click', sendNotification);
+        
+        document.getElementById('notify-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendNotification();
+            }
+        });
+
+        function sendNotification() {
+            const message = document.getElementById('notify-input').value.trim();
+            if (message) {
+                addChatMessage("OPERATOR", message, false, false);
+                document.getElementById('notify-input').value = '';
+                
+                // Generate response after random delay
+                setTimeout(() => {
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    const isRussian = randomResponse.match(/[А-Яа-я]/);
+                    addChatMessage("SYSTEM", randomResponse, true, Math.random() > 0.5, isRussian);
+                    
+                    // Increase panic level when interacting
+                    if (panicLevel < 5) {
+                        panicLevel++;
+                        increasePanic();
+                    }
+                }, 1000 + Math.random() * 2000);
+            }
+        }
         
         // ===== LOADING SCREEN =====
         function initSystem() {
@@ -652,13 +774,13 @@
                 }, 3000);
             }, 1000);
             
-            // Periodically add new nodes (slower at start)
+            // Periodically add new nodes (every 3 seconds)
             setInterval(() => {
-                if (nodes.length < (isPanicMode ? 50 : 30) && Math.random() > 0.7) {
+                if (nodes.length < (isPanicMode ? 50 : 30)) {
                     createNode();
                     addChatMessage("SYSTEM", `New node detected. Total nodes: ${nodes.length}`, false, true);
                 }
-            }, isPanicMode ? 3000 : 7000);
+            }, 3000);
             
             // Add random system alerts (calmer at start)
             setInterval(() => {
