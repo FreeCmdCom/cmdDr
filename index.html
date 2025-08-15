@@ -27,6 +27,38 @@
             grid-template-columns: 70% 30%;
         }
         
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 2s ease-out;
+        }
+        
+        #skull {
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            text-align: center;
+            font-size: 10px;
+            line-height: 10px;
+            margin-bottom: 20px;
+        }
+        
+        #loading-text {
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
         #map-container {
             position: relative;
             border-right: 1px solid #333;
@@ -38,7 +70,7 @@
         #world-map {
             width: 200%;
             height: 200%;
-            background: #001100;
+            background: radial-gradient(circle, #001100 0%, #000 100%);
             position: absolute;
             top: -50%;
             left: -50%;
@@ -247,13 +279,67 @@
     </style>
 </head>
 <body>
+    <div id="loading-screen">
+        <div id="skull">
+                         ..-:"''         ''"-..
+                      .-'                      '-.
+                    .'              .     .       '.
+                  .'   .          .    .      .    .''.
+                .'  .    .       .   .   .     .   . ..:.
+              .' .   . .  .       .   .   ..  .   . ....::.
+             ..   .   .      .  .    .     .  ..  . ....:IA.
+            .:  .   .    .    .  .  .    .. .  .. .. ....:IA.
+           .: .   .   ..   .    .     . . .. . ... ....:.:VHA.
+           '..  .  .. .   .       .  . .. . .. . .....:.::IHHB.
+          .:. .  . .  . .   .  .  . . . ...:.:... .......:HIHMM.
+         .:.... .   . ."::"'.. .   .  . .:.:.:II;,. .. ..:IHIMMA
+         ':.:..  ..::IHHHHHI::. . .  ...:.::::.,,,. . ....VIMMHM
+        .:::I. .AHHHHHHHHHHAI::. .:...,:IIHHHHHHMMMHHL:. . VMMMM
+       .:.:V.:IVHHHHHHHMHMHHH::..:" .:HIHHHHHHHHHHHHHMHHA. .VMMM.
+       :..V.:IVHHHHHMMHHHHHHHB... . .:VPHHMHHHMMHHHHHHHHHAI.:VMMI
+       ::V..:VIHHHHHHMMMHHHHHH. .   .I":IIMHHMMHHHHHHHHHHHAPI:WMM
+       ::". .:.HHHHHHHHMMHHHHHI.  . .:..I:MHMMHHHHHHHHHMHV:':H:WM
+       :: . :.::IIHHHHHHMMHHHHV  .ABA.:.:IMHMHMMMHMHHHHV:'. .IHWW
+       '.  ..:..:.:IHHHHHMMHV" .AVMHMA.:.'VHMMMMHHHHHV:' .  :IHWV
+        :.  .:...:".:.:TPP"   .AVMMHMMA.:. "VMMHHHP.:... .. :IVAI
+       .:.   '... .:"'   .   ..HMMMHMMMA::. ."VHHI:::....  .:IHW'
+       ...  .  . ..:IIPPIH: ..HMMMI.MMMV:I:.  .:ILLH:.. ...:I:IM
+     : .   .'"' .:.V". .. .  :HMMM:IMMMI::I. ..:HHIIPPHI::'.P:HM.
+     :.  .  .  .. ..:.. .    :AMMM IMMMM..:...:IV":T::I::.".:IHIMA
+     'V:.. .. . .. .  .  .   'VMMV..VMMV :....:V:.:..:....::IHHHMH
+       "IHH:.II:.. .:. .  . . . " :HB"" . . ..PI:.::.:::..:IHHMMV"
+        :IP""HHII:.  .  .    . . .'V:. . . ..:IH:.:.::IHIHHMMMMM"
+        :V:. VIMA:I..  .     .  . .. . .  .:.I:I:..:IHHHHMMHHMMM
+        :"VI:.VWMA::. .:      .   .. .:. ..:.I::.:IVHHHMMMHMMMMI
+        :."VIIHHMMA:.  .   .   .:  .:.. . .:.II:I:AMMMMMMHMMMMMI
+        :..VIHIHMMMI...::.,:.,:!"I:!"I!"I!"V:AI:VAMMMMMMHMMMMMM'
+        ':.:HIHIMHHA:"!!"I.:AXXXVVXXXXXXXA:."HPHIMMMMHHMHMMMMMV
+          V:H:I:MA:W'I :AXXXIXII:IIIISSSSSSXXA.I.VMMMHMHMMMMMM
+            'I::IVA ASSSSXSSSSBBSBMBSSSSSSBBMMMBS.VVMMHIMM'"'
+             I:: VPAIMSSSSSSSSSBSSSMMBSSSBBMMMMXXI:MMHIMMI
+            .I::. "H:XIIXBBMMMMMMMMMMMMMMMMMBXIXXMMPHIIMM'
+            :::I.  ':XSSXXIIIIXSSBMBSSXXXIIIXXSMMAMI:.IMM
+            :::I:.  .VSSSSSISISISSSBII:ISSSSBMMB:MI:..:MM
+            ::.I:.  ':"SSSSSSSISISSXIIXSSSSBMMB:AHI:..MMM.
+            ::.I:. . ..:"BBSSSSSSSSSSSSBBBMMMB:AHHI::.HMMI
+            :..::.  . ..::":BBBBBSSBBBMMMB:MMMMHHII::IHHMI
+            ':.I:... ....:IHHHHHMMMMMMMMMMMMMMMHHIIIIHMMV"
+              "V:. ..:...:.IHHHMMMMMMMMMMMMMMMMHHHMHHMHP'
+               ':. .:::.:.::III::IHHHHMMMMMHMHMMHHHHM"
+                 "::....::.:::..:..::IIIIIHHHHMMMHHMV"
+                   "::.::.. .. .  ...:::IIHHMMMMHMV"
+                     "V::... . .I::IHHMMV"'
+                       '"VHVHHHAHHHHMMV:"'
+        </div>
+        <div id="loading-text">INITIALIZING GLOBAL DARKNET MONITORING...</div>
+    </div>
+    
     <div id="map-container">
         <div id="world-map">
             <!-- Country outlines -->
             <div id="usa" class="country"></div>
             <div id="canada" class="country"></div>
             <div id="mexico" class="country"></div>
-            <!-- Add more countries as needed -->
         </div>
     </div>
     
@@ -274,6 +360,32 @@
     </div>
 
     <script>
+        // ===== ЗВУКОВЫЕ ЭФФЕКТЫ =====
+        function playRadarSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioContext = new AudioContext();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 2);
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.5);
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 2);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 2);
+            } catch (e) {
+                console.error("Audio error:", e);
+            }
+        }
+
         // ===== MAP CONTROLS =====
         const mapContainer = document.getElementById('map-container');
         const worldMap = document.getElementById('world-map');
@@ -321,14 +433,12 @@
 
         const users = [
             "Agent_K", "Ghost", "NullByte", "Overlord", "Phantom", 
-            "Rogue", "Shadow", "Spectre", "Virus", "ZeroCool",
-            "KiberBaron", "DarkLord", "Neo", "Trinity", "Morpheus"
+            "Rogue", "Shadow", "Spectre", "Virus", "ZeroCool"
         ];
 
         const devices = [
             "Mainframe", "Server", "Router", "Satellite", 
-            "Drone", "Sensor", "Node", "Hub", "Relay",
-            "Firewall", "Proxy", "Tor Node", "VPN Cluster"
+            "Drone", "Sensor", "Node", "Hub", "Relay"
         ];
 
         const problems = [
@@ -361,18 +471,15 @@
             const node = document.createElement('div');
             node.className = 'node';
             
-            // Random position within country
             const x = Math.random() * 100;
             const y = Math.random() * 100;
             
             node.style.left = `${x}%`;
             node.style.top = `${y}%`;
             
-            // Create menu
             const menu = document.createElement('div');
             menu.className = 'node-menu';
             
-            // Generate random node info
             const username = users[Math.floor(Math.random() * users.length)];
             const ip = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
             const password = generatePassword();
@@ -398,7 +505,6 @@
                 </div>
             `;
             
-            // Add to country
             country.appendChild(node);
             const nodeObj = { 
                 element: node, 
@@ -410,7 +516,30 @@
             nodes.push(nodeObj);
             countries[countryId].nodes.push(nodeObj);
             
-            // Randomly report problems
+            node.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeAllMenus();
+                
+                const countryRect = country.getBoundingClientRect();
+                const nodeRect = node.getBoundingClientRect();
+                
+                let menuLeft = nodeRect.left - countryRect.left;
+                let menuTop = nodeRect.bottom - countryRect.top + 5;
+                
+                if (menuLeft + 200 > countryRect.width) {
+                    menuLeft = countryRect.width - 200;
+                }
+                
+                if (menuTop + 150 > countryRect.height) {
+                    menuTop = nodeRect.top - countryRect.top - 150;
+                }
+                
+                menu.style.left = `${menuLeft}px`;
+                menu.style.top = `${menuTop}px`;
+                menu.style.display = 'block';
+                country.appendChild(menu);
+            });
+            
             if (Math.random() > 0.5) {
                 setTimeout(() => {
                     reportProblem(username, device, countryId);
@@ -420,33 +549,6 @@
             return nodeObj;
         }
 
-        // ===== SYSTEM INITIALIZATION =====
-        function initSystem() {
-            // Create initial nodes for each country
-            Object.keys(countries).forEach(countryId => {
-                for (let i = 0; i < 5; i++) {
-                    createNode(countryId);
-                }
-            });
-            
-            // Add system messages
-            addChatMessage("SYSTEM", "Initializing Global DarkNet Monitoring...", false, true);
-            addChatMessage("SYSTEM", "Tracking nodes across North America...", false, true);
-            addChatMessage("SYSTEM", `USA: ${countries.usa.nodes.length} nodes`, false, false);
-            addChatMessage("SYSTEM", `Canada: ${countries.canada.nodes.length} nodes`, false, false);
-            addChatMessage("SYSTEM", "All systems operational", false, false);
-            
-            // Start periodic node creation
-            setInterval(() => {
-                Object.keys(countries).forEach(countryId => {
-                    if (countries[countryId].nodes.length < 15) {
-                        createNode(countryId);
-                    }
-                });
-            }, 3000);
-        }
-
-        // ===== OTHER FUNCTIONS (same as before) =====
         function generatePassword() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%^&*';
             return Array.from({length: 12}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
@@ -466,7 +568,6 @@
                 node.element.style.backgroundColor = '#f00';
                 setTimeout(() => {
                     node.element.style.display = 'none';
-                    // Remove from country nodes array
                     countries[node.country].nodes = countries[node.country].nodes.filter(n => n !== node);
                 }, 1000);
                 
@@ -545,7 +646,6 @@
             
             addChatMessage("SYSTEM", panicMessages[panicLevel-1], true, true);
             
-            // In high panic, start randomly banning nodes
             if (panicLevel >= 3) {
                 Object.keys(countries).forEach(countryId => {
                     const nodesToBan = Math.floor(Math.random() * 2);
@@ -600,6 +700,57 @@
         document.getElementById('notify-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendNotification();
         });
+
+        // ===== SYSTEM INITIALIZATION =====
+        function initSystem() {
+            playRadarSound();
+            
+            setTimeout(() => {
+                document.getElementById('loading-text').textContent = "ACCESSING GLOBAL NODES...";
+            }, 1500);
+            
+            setTimeout(() => {
+                document.getElementById('loading-text').textContent = "ESTABLISHING SECURE CONNECTIONS...";
+            }, 3000);
+            
+            setTimeout(() => {
+                document.getElementById('loading-text').textContent = "LOADING MONITORING MODULES...";
+            }, 4500);
+            
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.opacity = '0';
+                
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    startSystem();
+                }, 2000);
+            }, 6000);
+        }
+
+        function startSystem() {
+            // Create initial nodes
+            Object.keys(countries).forEach(countryId => {
+                for (let i = 0; i < 5; i++) {
+                    createNode(countryId);
+                }
+            });
+            
+            // Add system messages
+            addChatMessage("SYSTEM", "Initializing Global DarkNet Monitoring...", false, true);
+            addChatMessage("SYSTEM", "Tracking nodes across North America...", false, true);
+            addChatMessage("SYSTEM", `USA: ${countries.usa.nodes.length} nodes`, false, false);
+            addChatMessage("SYSTEM", `Canada: ${countries.canada.nodes.length} nodes`, false, false);
+            addChatMessage("SYSTEM", "All systems operational", false, false);
+            
+            // Start periodic node creation
+            setInterval(() => {
+                Object.keys(countries).forEach(countryId => {
+                    if (countries[countryId].nodes.length < 15) {
+                        createNode(countryId);
+                    }
+                });
+            }, 3000);
+        }
 
         // ===== SECURITY =====
         document.addEventListener('contextmenu', (e) => {
