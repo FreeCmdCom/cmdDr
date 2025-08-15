@@ -326,6 +326,37 @@
     </div>
 
     <script>
+        // ===== ЗВУКОВЫЕ ЭФФЕКТЫ =====
+        function playRadarSound() {
+            try {
+                // Создаём звуковой контекст
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioContext = new AudioContext();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                // Настраиваем осциллятор
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 2);
+                
+                // Настраиваем громкость (fade-in и fade-out)
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.5);
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 2);
+                
+                // Подключаем узлы
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Запускаем и останавливаем
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 2);
+            } catch (e) {
+                console.error("Audio error:", e);
+            }
+        }
+
         // ===== GAME STATE =====
         let bansCount = 0;
         let panicLevel = 0;
@@ -455,6 +486,9 @@
             const loadingScreen = document.getElementById('loading-screen');
             const radarContainer = document.getElementById('radar-container');
             const chatContainer = document.getElementById('chat-container');
+            
+            // Play radar sound on startup
+            playRadarSound();
             
             // Simulate system loading
             setTimeout(() => {
